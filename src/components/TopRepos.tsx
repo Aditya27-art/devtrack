@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useAccount } from "@/components/AccountContext";
 import type { RepoHealthScore } from "@/types/repo-health";
-import RepoHealthPanel from "@/components/RepoHealthPanel";
 
 interface RepoLanguage {
   name: string;
@@ -85,7 +84,7 @@ export default function TopRepos() {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const [pinnedRepos, setPinnedRepos] = useState<string[]>([]);
   const [pinError, setPinError] = useState<string | null>(null);
-  const [activeHealthRepo, setActiveHealthRepo] = useState<string | null>(null);
+
   useEffect(() => {
     fetch("/api/user/settings")
       .then((r) => r.json())
@@ -327,15 +326,12 @@ export default function TopRepos() {
                     {healthLoading ? (
                       <div className="h-5 w-9 rounded bg-[var(--card-muted)] animate-pulse" />
                     ) : health ? (
-                      <button
-                        type="button"
-                        onClick={() => setActiveHealthRepo(repo.name)}
-                        className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold cursor-pointer ${badgeClass}`}
+                      <span
+                        className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${badgeClass}`}
                         title={badgeTitle}
-                        aria-label={`View health breakdown for ${shortName}`}
                       >
                         {health.score}
-                      </button>
+                      </span>
                     ) : (
                       <span
                         className="inline-flex items-center rounded-full border border-[var(--border)] bg-[var(--control)] px-2 py-0.5 text-xs font-semibold text-[var(--muted-foreground)]"
@@ -409,13 +405,6 @@ export default function TopRepos() {
          {minutesAgo === 0 ? "Updated just now" : `Updated ${minutesAgo} min ago`}
         </p>
      )}
-      {activeHealthRepo && healthScores[activeHealthRepo] && (
-        <RepoHealthPanel
-          health={healthScores[activeHealthRepo]}
-          isOpen={true}
-          onClose={() => setActiveHealthRepo(null)}
-        />
-      )}
     </div>
   );
 }

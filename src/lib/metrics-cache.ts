@@ -89,7 +89,7 @@ function isTruthyCacheBypass(value: string | null): boolean {
   return ["1", "true", "yes", "on"].includes(value.trim().toLowerCase());
 }
 
-export function getRedisClient(): Redis | null {
+function getRedisClient(): Redis | null {
   if (redisClient !== undefined) {
     return redisClient;
   }

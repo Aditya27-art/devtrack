@@ -1,7 +1,20 @@
 "use client";
 
 import { useEffect } from "react";
-import { getSafeErrorMessage } from "@/lib/error-utils";
+
+const SAFE_ERROR_MESSAGES: Record<string, string> = {
+  TokenRevoked: "Your GitHub session has expired. Please sign in again.",
+};
+
+function getSafeMessage(error: Error): string {
+  if (error.message in SAFE_ERROR_MESSAGES) {
+    return SAFE_ERROR_MESSAGES[error.message];
+  }
+  if (process.env.NODE_ENV === "production") {
+    return "An unexpected error occurred. Our team has been notified.";
+  }
+  return error.message || "Unknown error";
+}
 
 export default function Error({
   error,
@@ -14,6 +27,7 @@ export default function Error({
     if (process.env.NODE_ENV !== "production") {
       console.error(error);
     }
+    // reportToSentry(error);
   }, [error]);
 
   return (
@@ -42,7 +56,7 @@ export default function Error({
           Something went wrong
         </h1>
         <p className="mb-6 text-sm text-[var(--muted-foreground)]">
-          {getSafeErrorMessage(error)}
+          {getSafeMessage(error)}
         </p>
         {error.digest && (
           <p className="mb-4 text-xs text-[var(--muted-foreground)]">

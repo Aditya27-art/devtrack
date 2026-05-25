@@ -6,7 +6,6 @@ import ShortcutsModal from "./ShortcutsModal";
 
 export default function KeyboardShortcuts() {
   const [isOpen, setIsOpen] = useState(false);
-  
   const [announcement, setAnnouncement] = useState("");
   const { theme, toggleTheme } = useTheme();
   const keyboardToggleRef = useRef(false);
@@ -76,7 +75,8 @@ export default function KeyboardShortcuts() {
         </kbd>
         <span>Shortcuts</span>
       </button>
+
       <ShortcutsModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
-        </>
+    </>
   );
 }
